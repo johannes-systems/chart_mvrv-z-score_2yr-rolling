@@ -12,7 +12,6 @@
 import { Env, MVRVResponse, MVRVDataPoint } from './types';
 import { calculateFullHistoricalRollingZScore, calculateTodayRollingZScore } from './calculator';
 import { fetchHistoricalMVRVData, fetchLatestMVRVData } from './data-fetcher';
-import { htmlTemplate } from './html-template';
 
 // KV Cache Keys
 const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling';
@@ -48,17 +47,11 @@ export default {
       }
     }
 
-    // Route: GET / (HTML Frontend)
-    if (url.pathname === '/' && request.method === 'GET') {
-      return htmlResponse(htmlTemplate);
-    }
-
     // Default route - API info
     return jsonResponse(
       {
         service: 'MVRV Z-Score 2YR Rolling',
         endpoints: {
-          'GET /': 'Interactive chart (HTML)',
           'GET /api/mvrv-2yr': 'Returns complete 2YR rolling Z-Score dataset (JSON)'
         }
       },
@@ -166,19 +159,6 @@ function jsonResponse(data: any, status = 200): Response {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
-      'Cache-Control': 'public, max-age=3600' // Browser cache for 1 hour
-    }
-  });
-}
-
-/**
- * Helper: Create HTML response
- */
-function htmlResponse(html: string): Response {
-  return new Response(html, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'public, max-age=3600' // Browser cache for 1 hour
     }
   });
