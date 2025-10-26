@@ -14,8 +14,8 @@ import { calculateFullHistoricalRollingZScore } from './calculator';
 import { fetchHistoricalMVRVData } from './data-fetcher';
 
 // KV Cache Keys
-const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling_v4'; // v4: Added Bitcoin price data
-const CACHE_KEY_HISTORICAL = 'mvrv_historical_values_v4'; // v4: Added PriceUSD metric
+const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling_v5'; // v5: Extended data back to 2010 (shows from 2012)
+const CACHE_KEY_HISTORICAL = 'mvrv_historical_values_v5'; // v5: Fetch from 2010-01-01
 
 // Cache TTLs (in seconds)
 const TTL_24_HOURS = 86400; // 24 hours for rolling data
@@ -133,7 +133,8 @@ async function getHistoricalMVRVValues(env: Env): Promise<any[]> {
   console.log('Fetching fresh historical data from Coin Metrics');
 
   // Fetch from Coin Metrics Community API (FREE!)
-  const historicalData = await fetchHistoricalMVRVData('2012-01-01');
+  // Start from 2010 to enable Z-Score calculation from 2012 onwards (2010 + 730 days)
+  const historicalData = await fetchHistoricalMVRVData('2010-01-01');
 
   // Cache for 7 days
   await env.MVRV_CACHE.put(

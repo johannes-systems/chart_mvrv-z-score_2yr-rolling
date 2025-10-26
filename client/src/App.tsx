@@ -264,7 +264,7 @@ export default function App() {
 
         {/* Info footer */}
         <div className="mt-4 text-center text-xs text-muted-foreground">
-          <p>Data starts July 2012 • Updates daily at 2 AM UTC</p>
+          <p>Data starts January 2012 • Updates daily at 2 AM UTC</p>
           <p className="mt-1">Powered by Cloudflare Workers + Vite + React</p>
         </div>
       </div>

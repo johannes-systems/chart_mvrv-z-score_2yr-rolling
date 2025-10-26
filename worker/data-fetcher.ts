@@ -27,7 +27,7 @@ interface CoinMetricsResponse {
  * Handles pagination automatically
  */
 export async function fetchHistoricalMVRVData(
-  startDate: string = '2012-01-01',
+  startDate: string = '2010-01-01',
   endDate?: string
 ): Promise<HistoricalMVRVValue[]> {
   const allData: HistoricalMVRVValue[] = [];
