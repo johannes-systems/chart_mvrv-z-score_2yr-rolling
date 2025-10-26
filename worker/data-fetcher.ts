@@ -86,6 +86,11 @@ export async function fetchHistoricalMVRVData(
   } while (nextPageToken);
 
   console.log(`Total data points fetched: ${allData.length}`);
+
+  // Sort data chronologically (oldest to newest) to ensure correct order
+  allData.sort((a, b) => a.date.localeCompare(b.date));
+  console.log(`First date after sort: ${allData[0]?.date}, Last date: ${allData[allData.length - 1]?.date}`);
+
   return allData;
 }
 
