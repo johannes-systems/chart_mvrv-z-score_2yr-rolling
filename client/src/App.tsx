@@ -181,7 +181,10 @@ export default function App() {
                   yAxisId="left"
                   orientation="left"
                   scale="log"
-                  domain={['auto', 'auto']}
+                  domain={[
+                    (dataMin: number) => dataMin * 0.8,
+                    (dataMax: number) => dataMax * 1.2
+                  ]}
                   tick={{ fontSize: 12, fill: '#10b981' }}
                   label={{ value: 'Bitcoin Price (USD, Log Scale)', angle: -90, position: 'insideLeft', style: { fill: '#10b981', fontSize: 14, fontWeight: 'bold' } }}
                   tickFormatter={(value) => {
