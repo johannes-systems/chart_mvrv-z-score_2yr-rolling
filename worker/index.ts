@@ -47,16 +47,9 @@ export default {
       }
     }
 
-    // Default route - API info
-    return jsonResponse(
-      {
-        service: 'MVRV Z-Score 2YR Rolling',
-        endpoints: {
-          'GET /api/mvrv-2yr': 'Returns complete 2YR rolling Z-Score dataset (JSON)'
-        }
-      },
-      200
-    );
+    // Pass all other requests to static assets (React frontend)
+    // Reference: https://developers.cloudflare.com/workers/static-assets/binding
+    return env.ASSETS.fetch(request);
   },
 
   /**

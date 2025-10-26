@@ -2,6 +2,7 @@
 
 export interface Env {
   MVRV_CACHE: KVNamespace;
+  ASSETS: Fetcher; // Static assets binding for serving React frontend
 }
 
 export interface MVRVDataPoint {
