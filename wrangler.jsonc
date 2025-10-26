@@ -1,0 +1,19 @@
+{
+  // Wrangler configuration for MVRV Z-Score 2YR Rolling Worker
+  "name": "mvrv-2yr-rolling",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-23",
+
+  // KV Namespace bindings
+  "kv_namespaces": [
+    {
+      "binding": "MVRV_CACHE",
+      "id": "YOUR_KV_NAMESPACE_ID_HERE"
+    }
+  ],
+
+  // Optional: Cron trigger for daily updates at 2 AM UTC
+  "triggers": {
+    "crons": ["0 2 * * *"]
+  }
+}

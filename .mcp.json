@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "shadcn-ui": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "C:\\Users\\johan\\AppData\\Roaming\\npm\\node_modules\\@jpisnice\\shadcn-ui-mcp-server\\build\\index.js"
+      ],
+      "env": {}
+    },
+    "cloudflare-observability": {
+      "type": "sse",
+      "url": "https://observability.mcp.cloudflare.com/sse"
+    },
+    "cloudflare-bindings": {
+      "type": "sse",
+      "url": "https://bindings.mcp.cloudflare.com/sse"
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "chrome-devtools-mcp@latest",
+        "--isolated"
+      ],
+      "env": {
+        "CHROME_PATH": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+      }
+    }
+  }
+}
