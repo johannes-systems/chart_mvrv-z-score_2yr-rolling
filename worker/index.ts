@@ -10,8 +10,8 @@
  */
 
 import { Env, MVRVResponse, MVRVDataPoint } from './types';
-import { calculateFullHistoricalRollingZScore, calculateTodayRollingZScore } from './calculator';
-import { fetchHistoricalMVRVData, fetchLatestMVRVData } from './data-fetcher';
+import { calculateFullHistoricalRollingZScore } from './calculator';
+import { fetchHistoricalMVRVData } from './data-fetcher';
 
 // KV Cache Keys
 const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling_v4'; // v4: Added Bitcoin price data
