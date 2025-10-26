@@ -10,16 +10,32 @@
     "run_worker_first": ["/api/*"]
   },
 
-  // KV Namespace bindings
+  // KV Namespace bindings - Production
   "kv_namespaces": [
     {
       "binding": "MVRV_CACHE",
-      "id": "YOUR_KV_NAMESPACE_ID_HERE"
+      "id": "78bf8ffe660342d29e35ec222fcc7d93"
     }
   ],
 
-  // Optional: Cron trigger for daily updates at 2 AM UTC
+  // Cron trigger for daily updates at 2 AM UTC
   "triggers": {
     "crons": ["0 2 * * *"]
+  },
+
+  // Environment configurations
+  "env": {
+    "staging": {
+      "name": "mvrv-2yr-rolling-staging",
+      "kv_namespaces": [
+        {
+          "binding": "MVRV_CACHE",
+          "id": "0ed93afabbdd4b768514527dbc9c0769"
+        }
+      ],
+      "triggers": {
+        "crons": ["0 2 * * *"]
+      }
+    }
   }
 }

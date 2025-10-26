@@ -26,3 +26,10 @@ Thumbs.db
 # Claude Code
 .claude/
 CLAUDE.md
+
+# Secrets and sensitive files
+*.pem
+*.key
+*.secret
+.secrets/
+wrangler.toml.local

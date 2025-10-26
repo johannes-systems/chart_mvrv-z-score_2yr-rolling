@@ -188,11 +188,22 @@ docs/
 - **Scheduling**: Cron Triggers
 - **Data Source**: Coin Metrics Community API (free)
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for automatic deployments:
+
+- **Staging**: Auto-deploys when pushing to `develop` branch
+- **Production**: Auto-deploys when pushing to `main` branch
+- **Quality Checks**: Runs linting, type checking, and security scans on all PRs
+
+**Setup required**: Configure GitHub Secrets (see [GITHUB-SECRETS-SETUP.md](./GITHUB-SECRETS-SETUP.md))
+
 ## Documentation
 
 | Guide | Description |
 |-------|-------------|
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Complete deployment walkthrough |
+| [GITHUB-SECRETS-SETUP.md](./GITHUB-SECRETS-SETUP.md) | CI/CD GitHub Secrets configuration |
 | [NEXT-STEPS.md](./NEXT-STEPS.md) | Quick 8-minute setup guide |
 | [FRONTEND-GUIDE.md](./FRONTEND-GUIDE.md) | React + Recharts integration |
 | [API-TESTING-RESULTS.md](./API-TESTING-RESULTS.md) | API verification report |
