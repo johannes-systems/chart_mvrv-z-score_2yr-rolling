@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler deploy",
-    "test-cron": "wrangler dev --test-scheduled"
+    "test-cron": "wrangler dev --test-scheduled",
+    "lint": "tsc --noEmit"
   },
   "keywords": [
     "cloudflare",
