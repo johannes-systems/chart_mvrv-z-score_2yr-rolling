@@ -76,7 +76,8 @@ export default function App() {
 
   useEffect(() => {
     console.log('Fetching data from /api/mvrv-2yr...');
-    fetch('/api/mvrv-2yr')
+    // Add cache-busting timestamp to ensure fresh data
+    fetch(`/api/mvrv-2yr?t=${Date.now()}`)
       .then(res => {
         console.log('Response status:', res.status);
         if (!res.ok) throw new Error('Failed to fetch data');

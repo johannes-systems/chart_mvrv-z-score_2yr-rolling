@@ -14,8 +14,8 @@ import { calculateFullHistoricalRollingZScore, calculateTodayRollingZScore } fro
 import { fetchHistoricalMVRVData, fetchLatestMVRVData } from './data-fetcher';
 
 // KV Cache Keys
-const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling';
-const CACHE_KEY_HISTORICAL = 'mvrv_historical_values';
+const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling_v2'; // Changed to force cache refresh
+const CACHE_KEY_HISTORICAL = 'mvrv_historical_values_v2'; // Changed to force cache refresh
 
 // Cache TTLs (in seconds)
 const TTL_24_HOURS = 86400; // 24 hours for rolling data
@@ -36,7 +36,9 @@ export default {
     // Route: GET /api/mvrv-2yr (JSON API)
     if (url.pathname === '/api/mvrv-2yr' && request.method === 'GET') {
       try {
-        const data = await getMVRV2YRData(env);
+        // Check for force refresh parameter
+        const forceRefresh = url.searchParams.get('refresh') === '1';
+        const data = await getMVRV2YRData(env, forceRefresh);
         return jsonResponse(data);
       } catch (error) {
         console.error('Error fetching MVRV 2YR data:', error);
@@ -96,10 +98,14 @@ async function getMVRV2YRData(env: Env, forceRefresh = false): Promise<MVRVRespo
 
   console.log(`Calculated ${finalData.length} rolling Z-Score data points`);
 
+  // Reverse data so it goes from oldest to newest (2012 -> 2025)
+  // Coin Metrics returns data in descending order, but charts expect ascending
+  const sortedData = finalData.reverse();
+
   const response: MVRVResponse = {
     window: '730d',
     lastUpdate: new Date().toISOString(),
-    data: finalData
+    data: sortedData
   };
 
   // Cache with 24-hour TTL
