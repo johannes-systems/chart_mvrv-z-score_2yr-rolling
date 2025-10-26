@@ -16,6 +16,7 @@ interface MVRVDataPoint {
   date: string;
   zscore: number;
   mvrv: number;
+  price: number;
 }
 
 interface MVRVResponse {
@@ -38,6 +39,7 @@ const CustomTooltip = ({ active, payload }: TooltipProps) => {
   const data = payload[0].payload;
   const zscore = data.zscore.toFixed(2);
   const mvrv = data.mvrv.toFixed(2);
+  const price = data.price.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
   let zoneColor = 'text-gray-600 dark:text-gray-400';
   let zoneLabel = 'Neutral';
@@ -54,6 +56,9 @@ const CustomTooltip = ({ active, payload }: TooltipProps) => {
     <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
       <p className="text-xs text-muted-foreground mb-1">{data.date}</p>
       <div className="space-y-1">
+        <p className="text-sm font-semibold text-foreground">
+          Price: {price}
+        </p>
         <p className={`text-sm font-semibold ${zoneColor}`}>
           Z-Score: {zscore}
         </p>
@@ -134,22 +139,24 @@ export default function App() {
 
           <CardContent>
             <div style={{ width: '100%', height: '500px', display: 'flex', justifyContent: 'center' }}>
-              <LineChart width={900} height={500} data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <LineChart width={900} height={500} data={data} margin={{ top: 5, right: 60, left: 60, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
 
-                {/* Green zone: Undervalued (< 0.1) */}
+                {/* Green zone: Undervalued (< 0.1) - referenced to right Y-axis */}
                 <ReferenceArea
+                  yAxisId="right"
                   y1={-10}
                   y2={0.1}
                   fill="#22c55e"
                   fillOpacity={0.1}
                 />
 
-                {/* Zero reference line */}
-                <ReferenceLine y={0} stroke="#9ca3af" strokeDasharray="3 3" />
+                {/* Zero reference line - referenced to right Y-axis */}
+                <ReferenceLine yAxisId="right" y={0} stroke="#9ca3af" strokeDasharray="3 3" />
 
-                {/* Red zone: Overvalued (> 7) */}
+                {/* Red zone: Overvalued (> 7) - referenced to right Y-axis */}
                 <ReferenceArea
+                  yAxisId="right"
                   y1={7}
                   y2={15}
                   fill="#ef4444"
@@ -165,37 +172,81 @@ export default function App() {
                   }}
                 />
 
+                {/* Left Y-Axis: Bitcoin Price */}
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  yAxisId="left"
+                  orientation="left"
+                  tick={{ fontSize: 12, fill: '#10b981' }}
+                  label={{ value: 'Bitcoin Price (USD)', angle: -90, position: 'insideLeft', style: { fill: '#10b981', fontSize: 14, fontWeight: 'bold' } }}
+                  tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  domain={['auto', 'auto']}
+                  stroke="#10b981"
+                />
+
+                {/* Right Y-Axis: Z-Score */}
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  tick={{ fontSize: 12, fill: '#6366f1' }}
+                  label={{ value: '2YR Rolling Z-Score', angle: 90, position: 'insideRight', style: { fill: '#6366f1', fontSize: 14, fontWeight: 'bold' } }}
                   domain={[-2, 12]}
+                  stroke="#6366f1"
                 />
 
                 <Tooltip content={<CustomTooltip />} />
 
+                {/* Bitcoin Price Line (Green) */}
                 <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="price"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+
+                {/* Z-Score Line (Blue) */}
+                <Line
+                  yAxisId="right"
                   type="monotone"
                   dataKey="zscore"
                   stroke="#6366f1"
                   strokeWidth={2}
                   dot={false}
-                  animationDuration={1000}
+                  isAnimationActive={false}
                 />
               </LineChart>
             </div>
 
             {/* Legend */}
-            <div className="mt-6 flex flex-wrap gap-6 justify-center text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-green-500 opacity-30"></div>
-                <span className="text-muted-foreground">Undervalued (&lt; 0.1)</span>
+            <div className="mt-6 space-y-3">
+              {/* Lines Legend */}
+              <div className="flex flex-wrap gap-6 justify-center text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-0.5 bg-green-500"></div>
+                  <span className="text-muted-foreground font-medium">Bitcoin Price (USD)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-0.5 bg-indigo-500"></div>
+                  <span className="text-muted-foreground font-medium">2YR Rolling Z-Score</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-gray-400 dark:bg-gray-600"></div>
-                <span className="text-muted-foreground">Neutral (0.1 - 7)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-red-500 opacity-30"></div>
-                <span className="text-muted-foreground">Overvalued (&gt; 7)</span>
+
+              {/* Zones Legend */}
+              <div className="flex flex-wrap gap-6 justify-center text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-green-500 opacity-30"></div>
+                  <span className="text-muted-foreground">Undervalued (&lt; 0.1)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-gray-400 dark:bg-gray-600"></div>
+                  <span className="text-muted-foreground">Neutral (0.1 - 7)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-red-500 opacity-30"></div>
+                  <span className="text-muted-foreground">Overvalued (&gt; 7)</span>
+                </div>
               </div>
             </div>
           </CardContent>

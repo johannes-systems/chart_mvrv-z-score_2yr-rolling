@@ -57,7 +57,8 @@ export function calculateTodayRollingZScore(
   return {
     date: today.date,
     zscore,
-    mvrv: Number(today.mvrv.toFixed(4))
+    mvrv: Number(today.mvrv.toFixed(4)),
+    price: today.price || 0
   };
 }
 
@@ -80,7 +81,8 @@ export function calculateFullHistoricalRollingZScore(
     results.push({
       date: currentDay.date,
       zscore,
-      mvrv: Number(currentDay.mvrv.toFixed(4))
+      mvrv: Number(currentDay.mvrv.toFixed(4)),
+      price: currentDay.price || 0
     });
   }
 

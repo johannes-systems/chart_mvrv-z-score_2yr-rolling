@@ -14,8 +14,8 @@ import { calculateFullHistoricalRollingZScore, calculateTodayRollingZScore } fro
 import { fetchHistoricalMVRVData, fetchLatestMVRVData } from './data-fetcher';
 
 // KV Cache Keys
-const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling_v3'; // v3: Fixed data order (2012->2025)
-const CACHE_KEY_HISTORICAL = 'mvrv_historical_values_v3'; // v3: Added sort to ensure chronological order
+const CACHE_KEY_ROLLING = 'mvrv_2yr_rolling_v4'; // v4: Added Bitcoin price data
+const CACHE_KEY_HISTORICAL = 'mvrv_historical_values_v4'; // v4: Added PriceUSD metric
 
 // Cache TTLs (in seconds)
 const TTL_24_HOURS = 86400; // 24 hours for rolling data

@@ -9,6 +9,7 @@ export interface MVRVDataPoint {
   date: string; // ISO 8601 format: "YYYY-MM-DD"
   zscore: number; // 2-year rolling Z-Score
   mvrv: number; // Market Value to Realized Value ratio
+  price: number; // Bitcoin price in USD
 }
 
 export interface MVRVResponse {
@@ -22,4 +23,5 @@ export interface HistoricalMVRVValue {
   mvrv: number;
   marketCap?: number;
   realizedCap?: number;
+  price?: number;
 }

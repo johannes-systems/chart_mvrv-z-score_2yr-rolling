@@ -13,6 +13,7 @@ interface CoinMetricsDataPoint {
   time: string;
   CapMrktCurUSD: string;
   CapRealUSD: string;
+  PriceUSD: string;
 }
 
 interface CoinMetricsResponse {
@@ -50,12 +51,13 @@ export async function fetchHistoricalMVRVData(
       // Process data points
       for (const point of json.data) {
         // Skip if missing required metrics
-        if (!point.CapMrktCurUSD || !point.CapRealUSD) {
+        if (!point.CapMrktCurUSD || !point.CapRealUSD || !point.PriceUSD) {
           continue;
         }
 
         const marketCap = parseFloat(point.CapMrktCurUSD);
         const realizedCap = parseFloat(point.CapRealUSD);
+        const price = parseFloat(point.PriceUSD);
 
         // Calculate MVRV ratio
         const mvrv = realizedCap > 0 ? marketCap / realizedCap : 0;
@@ -64,7 +66,8 @@ export async function fetchHistoricalMVRVData(
           date: point.time.split('T')[0], // Extract YYYY-MM-DD
           mvrv: Number(mvrv.toFixed(6)),
           marketCap,
-          realizedCap
+          realizedCap,
+          price: Number(price.toFixed(2))
         });
       }
 
@@ -150,7 +153,7 @@ function buildCoinMetricsURL(
 ): string {
   const params = new URLSearchParams({
     assets: 'btc',
-    metrics: 'CapMrktCurUSD,CapRealUSD',
+    metrics: 'CapMrktCurUSD,CapRealUSD,PriceUSD',
     start_time: startDate,
     end_time: endDate,
     page_size: '1000' // Max records per page
