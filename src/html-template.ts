@@ -12,11 +12,14 @@ export const htmlTemplate = `
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Babel Standalone (must load first for JSX) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <!-- React & ReactDOM -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-  <!-- Recharts -->
+  <!-- Recharts (must load before our script) -->
   <script src="https://unpkg.com/recharts@2.10.3/dist/Recharts.js"></script>
 
   <style>
@@ -249,9 +252,6 @@ export const htmlTemplate = `
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<MVRVChart />);
   </script>
-
-  <!-- Babel Standalone for JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </body>
 </html>
 `;
