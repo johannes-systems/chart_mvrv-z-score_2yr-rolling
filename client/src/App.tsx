@@ -138,8 +138,9 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <div style={{ width: '100%', height: '500px', display: 'flex', justifyContent: 'center' }}>
-              <LineChart width={900} height={500} data={data} margin={{ top: 5, right: 60, left: 60, bottom: 5 }}>
+            <div style={{ width: '100%', height: '600px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 20, right: 70, left: 70, bottom: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
 
                 {/* Green zone: Undervalued (< -1) - referenced to right Y-axis */}
@@ -171,6 +172,8 @@ export default function App() {
                     const date = new Date(value);
                     return date.getFullYear().toString();
                   }}
+                  interval="preserveStartEnd"
+                  minTickGap={80}
                 />
 
                 {/* Left Y-Axis: Bitcoin Price (Logarithmic Scale) */}
@@ -195,6 +198,7 @@ export default function App() {
                   tick={{ fontSize: 12, fill: '#6366f1' }}
                   label={{ value: '2YR Rolling Z-Score', angle: 90, position: 'insideRight', style: { fill: '#6366f1', fontSize: 14, fontWeight: 'bold' } }}
                   domain={[-2, 5]}
+                  ticks={[-2, -1, 0, 1, 2, 3, 4, 5]}
                   stroke="#6366f1"
                 />
 
@@ -222,6 +226,7 @@ export default function App() {
                   isAnimationActive={false}
                 />
               </LineChart>
+              </ResponsiveContainer>
             </div>
 
             {/* Legend */}
