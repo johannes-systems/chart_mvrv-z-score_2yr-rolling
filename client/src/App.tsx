@@ -44,10 +44,10 @@ const CustomTooltip = ({ active, payload }: TooltipProps) => {
   let zoneColor = 'text-gray-600 dark:text-gray-400';
   let zoneLabel = 'Neutral';
 
-  if (data.zscore < 0.1) {
+  if (data.zscore < -1) {
     zoneColor = 'text-green-600 dark:text-green-500';
     zoneLabel = 'Undervalued';
-  } else if (data.zscore > 7) {
+  } else if (data.zscore > 3) {
     zoneColor = 'text-red-600 dark:text-red-500';
     zoneLabel = 'Overvalued';
   }
@@ -142,26 +142,27 @@ export default function App() {
               <LineChart width={900} height={500} data={data} margin={{ top: 5, right: 60, left: 60, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
 
-                {/* Green zone: Undervalued (< 0.1) - referenced to right Y-axis */}
+                {/* Green zone: Undervalued (< -1) - referenced to right Y-axis */}
                 <ReferenceArea
                   yAxisId="right"
                   y1={-10}
-                  y2={0.1}
+                  y2={-1}
                   fill="#22c55e"
-                  fillOpacity={0.1}
+                  fillOpacity={0.15}
                 />
 
-                {/* Zero reference line - referenced to right Y-axis */}
-                <ReferenceLine yAxisId="right" y={0} stroke="#9ca3af" strokeDasharray="3 3" />
-
-                {/* Red zone: Overvalued (> 7) - referenced to right Y-axis */}
+                {/* Red zone: Overvalued (> 3) - referenced to right Y-axis */}
                 <ReferenceArea
                   yAxisId="right"
-                  y1={7}
-                  y2={15}
+                  y1={3}
+                  y2={10}
                   fill="#ef4444"
-                  fillOpacity={0.1}
+                  fillOpacity={0.15}
                 />
+
+                {/* Reference lines for key thresholds */}
+                <ReferenceLine yAxisId="right" y={-1} stroke="#22c55e" strokeDasharray="3 3" strokeWidth={1.5} />
+                <ReferenceLine yAxisId="right" y={3} stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} />
 
                 <XAxis
                   dataKey="date"
@@ -172,14 +173,18 @@ export default function App() {
                   }}
                 />
 
-                {/* Left Y-Axis: Bitcoin Price */}
+                {/* Left Y-Axis: Bitcoin Price (Logarithmic Scale) */}
                 <YAxis
                   yAxisId="left"
                   orientation="left"
-                  tick={{ fontSize: 12, fill: '#10b981' }}
-                  label={{ value: 'Bitcoin Price (USD)', angle: -90, position: 'insideLeft', style: { fill: '#10b981', fontSize: 14, fontWeight: 'bold' } }}
-                  tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  scale="log"
                   domain={['auto', 'auto']}
+                  tick={{ fontSize: 12, fill: '#10b981' }}
+                  label={{ value: 'Bitcoin Price (USD, Log Scale)', angle: -90, position: 'insideLeft', style: { fill: '#10b981', fontSize: 14, fontWeight: 'bold' } }}
+                  tickFormatter={(value) => {
+                    if (value >= 1000) return `$${(value / 1000).toFixed(0)}k`;
+                    return `$${value.toFixed(0)}`;
+                  }}
                   stroke="#10b981"
                 />
 
@@ -189,7 +194,7 @@ export default function App() {
                   orientation="right"
                   tick={{ fontSize: 12, fill: '#6366f1' }}
                   label={{ value: '2YR Rolling Z-Score', angle: 90, position: 'insideRight', style: { fill: '#6366f1', fontSize: 14, fontWeight: 'bold' } }}
-                  domain={[-2, 12]}
+                  domain={[-2, 5]}
                   stroke="#6366f1"
                 />
 
@@ -236,16 +241,16 @@ export default function App() {
               {/* Zones Legend */}
               <div className="flex flex-wrap gap-6 justify-center text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded bg-green-500 opacity-30"></div>
-                  <span className="text-muted-foreground">Undervalued (&lt; 0.1)</span>
+                  <div className="w-4 h-4 rounded bg-green-500 opacity-40"></div>
+                  <span className="text-muted-foreground">Undervalued (&lt; -1)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-gray-400 dark:bg-gray-600"></div>
-                  <span className="text-muted-foreground">Neutral (0.1 - 7)</span>
+                  <span className="text-muted-foreground">Neutral (-1 to 3)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded bg-red-500 opacity-30"></div>
-                  <span className="text-muted-foreground">Overvalued (&gt; 7)</span>
+                  <div className="w-4 h-4 rounded bg-red-500 opacity-40"></div>
+                  <span className="text-muted-foreground">Overvalued (&gt; 3)</span>
                 </div>
               </div>
             </div>
