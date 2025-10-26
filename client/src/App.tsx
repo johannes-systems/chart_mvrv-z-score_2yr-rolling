@@ -75,17 +75,23 @@ export default function App() {
   const [lastUpdate, setLastUpdate] = useState<string>('');
 
   useEffect(() => {
+    console.log('Fetching data from /api/mvrv-2yr...');
     fetch('/api/mvrv-2yr')
       .then(res => {
+        console.log('Response status:', res.status);
         if (!res.ok) throw new Error('Failed to fetch data');
         return res.json();
       })
       .then((result: MVRVResponse) => {
+        console.log('Data received:', result.data.length, 'points');
+        console.log('First point:', result.data[0]);
+        console.log('Last point:', result.data[result.data.length - 1]);
         setData(result.data);
         setLastUpdate(new Date(result.lastUpdate).toLocaleDateString());
         setLoading(false);
       })
       .catch(err => {
+        console.error('Fetch error:', err);
         setError(err.message);
         setLoading(false);
       });
@@ -126,56 +132,54 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <div className="h-[500px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <div style={{ width: '100%', height: '500px', display: 'flex', justifyContent: 'center' }}>
+              <LineChart width={900} height={500} data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
 
-                  {/* Green zone: Undervalued (< 0.1) */}
-                  <ReferenceArea
-                    y1={-10}
-                    y2={0.1}
-                    fill="hsl(142 76% 36%)"
-                    fillOpacity={0.1}
-                  />
+                {/* Green zone: Undervalued (< 0.1) */}
+                <ReferenceArea
+                  y1={-10}
+                  y2={0.1}
+                  fill="#22c55e"
+                  fillOpacity={0.1}
+                />
 
-                  {/* Zero reference line */}
-                  <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
+                {/* Zero reference line */}
+                <ReferenceLine y={0} stroke="#9ca3af" strokeDasharray="3 3" />
 
-                  {/* Red zone: Overvalued (> 7) */}
-                  <ReferenceArea
-                    y1={7}
-                    y2={15}
-                    fill="hsl(0 84% 60%)"
-                    fillOpacity={0.1}
-                  />
+                {/* Red zone: Overvalued (> 7) */}
+                <ReferenceArea
+                  y1={7}
+                  y2={15}
+                  fill="#ef4444"
+                  fillOpacity={0.1}
+                />
 
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                    tickFormatter={(value) => {
-                      const date = new Date(value);
-                      return date.getFullYear().toString();
-                    }}
-                  />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  tickFormatter={(value) => {
+                    const date = new Date(value);
+                    return date.getFullYear().toString();
+                  }}
+                />
 
-                  <YAxis
-                    tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                    domain={[-2, 12]}
-                  />
+                <YAxis
+                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  domain={[-2, 12]}
+                />
 
-                  <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} />
 
-                  <Line
-                    type="monotone"
-                    dataKey="zscore"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    dot={false}
-                    animationDuration={1000}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+                <Line
+                  type="monotone"
+                  dataKey="zscore"
+                  stroke="#6366f1"
+                  strokeWidth={2}
+                  dot={false}
+                  animationDuration={1000}
+                />
+              </LineChart>
             </div>
 
             {/* Legend */}
